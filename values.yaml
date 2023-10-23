@@ -1,0 +1,19 @@
+replicaCount: 1
+image:
+  repository: europe-southwest1-docker.pkg.dev/trifacta-saas-qa/docker/fake-app
+  tag: 0.0.1
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 5000
+ingress:
+  enabled: true
+  annotations: {}
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

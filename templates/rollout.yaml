@@ -1,0 +1,73 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ template "fake-app.fullname" . }}
+  labels:
+    app: {{ template "fake-app.name" . }}
+    chart: {{ template "fake-app.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: {{ template "fake-app.name" . }}
+      release: {{ .Release.Name }}
+  strategy:
+    blueGreen:
+      activeService: {{ template "fake-app.fullname" . }}
+      previewService: {{ template "fake-app.fullname" . }}-preview
+
+      prePromotionAnalysis:
+        templates:
+            - templateName: fake-app-test-analysis
+
+#      postPromotionAnalysis:
+#        templates:
+#          - templateName: post-promotion-analysis
+
+      previewReplicaCount: 2
+      autoPromotionEnabled: true
+      autoPromotionSeconds: 1
+#      scaleDownDelaySeconds: 30
+
+      # 0 means not to scale down
+      abortScaleDownDelaySeconds: 30
+
+  template:
+    metadata:
+      labels:
+        app: {{ template "fake-app.name" . }}
+        # release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.port }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.port }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

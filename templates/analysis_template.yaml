@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: fake-app-test-analysis
+spec:
+  metrics:
+  - name: fake-app-test
+    count: 1
+    interval: 0s
+    failureLimit: 0
+    provider:
+      job:
+        spec:
+          backoffLimit: 0 # run once
+          template:
+            spec:
+              containers:
+              - name: fake-app-test
+                image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+                command: ["./test.sh"]
+                env:
+                  - name: HOST
+                    value: "release-name-fake-app-preview"
+                  - name: MARKER
+                    value: "passing"
+              restartPolicy: Never

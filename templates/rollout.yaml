@@ -39,7 +39,7 @@ spec:
     metadata:
       labels:
         app: {{ template "fake-app.name" . }}
-        # release: {{ .Release.Name }}
+        release: {{ .Release.Name }}
     spec:
       containers:
         - name: {{ .Chart.Name }}

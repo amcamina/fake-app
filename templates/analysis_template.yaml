@@ -12,6 +12,7 @@ spec:
       job:
         spec:
           backoffLimit: 0 # run once
+          ttlSecondsAfterFinished: 1800
           template:
             spec:
               containers:

@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: europe-southwest1-docker.pkg.dev/trifacta-saas-qa/docker/fake-app
-  tag: 0.3.1
+  tag: 0.0.3
   pullPolicy: Always
 service:
   type: ClusterIP

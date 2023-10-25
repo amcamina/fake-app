@@ -23,7 +23,7 @@ spec:
                   - name: HOST
                     value: "fake-app-preview"
                   - name: PORT
-                    value: 80
+                    value: "80"
                   - name: MARKER
                     value: "passing"
               restartPolicy: Never

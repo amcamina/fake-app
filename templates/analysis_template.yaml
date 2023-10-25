@@ -20,7 +20,7 @@ spec:
                 command: ["./test.sh"]
                 env:
                   - name: HOST
-                    value: "release-name-fake-app-preview"
+                    value: "fake-app-preview"
                   - name: MARKER
                     value: "passing"
               restartPolicy: Never
